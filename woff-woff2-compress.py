@@ -20,6 +20,15 @@ def getSourceFontFiles():
         sourceFontFiles[sourceDirKey] = glob.glob(pattern, recursive=True)
     return sourceFontFiles
 
+def checkPrograms():
+    try:
+        for program in programs:
+            sp.call([program], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
+    except BaseException:
+        print('Please make sure that you have both woff-tools and woff2 packages installed.')
+        exit(1)
+
+
 def convert(sourceFontPath, startPath):
     sourceFontRelPath = relpath(sourceFontPath, startPath)
     sourceRelPath =  dirname(sourceFontRelPath)
@@ -46,6 +55,7 @@ def convert(sourceFontPath, startPath):
 
 
 def main():
+    checkPrograms()
     sourceFontFiles = getSourceFontFiles()
 
     totalCounts = 0

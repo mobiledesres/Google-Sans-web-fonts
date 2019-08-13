@@ -30,7 +30,13 @@ def getPreferredFamily(font):
 
 
 def main():
-    assert len(argv) > 1, '[Usage] python2 GetFontFullName.py <fontFile>'
+    try:
+        assert len(argv) > 1
+    except AssertionError:
+        usageInfo = '[Usage] python2 %s <fontFile>' % __file__
+        print(usageInfo)
+        exit(1)
+
     font = ff.open(argv[1])
 
     fullName = getFontFullName(font)

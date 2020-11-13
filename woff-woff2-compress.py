@@ -12,7 +12,8 @@ dirs = {}
 for ext in (sourceExts + targetExts):
     dirs[ext] = abspath('%s/%s' % (baseDir, ext.upper()))
 
-def getSourceFontFiles():
+
+def get_source_font_files():
     sourceFontFiles = {}
     for sourceExt in sourceExts:
         sourceDirKey = dirs[sourceExt]
@@ -20,19 +21,20 @@ def getSourceFontFiles():
         sourceFontFiles[sourceDirKey] = glob.glob(pattern, recursive=True)
     return sourceFontFiles
 
-def checkPrograms():
+
+def check_programs():
     try:
         for program in programs:
             sp.call([program], stdout=sp.DEVNULL, stderr=sp.DEVNULL)
-    except BaseException:
+    except OSError:
         print('Please make sure that you have both woff-tools and woff2 packages installed.')
         exit(1)
 
 
-def convert(sourceFontPath, startPath):
-    sourceFontRelPath = relpath(sourceFontPath, startPath)
-    sourceRelPath =  dirname(sourceFontRelPath)
-    sourceFontFileName = basename(sourceFontPath)
+def convert(source_font_path: str, start_path: str):
+    sourceFontRelPath = relpath(source_font_path, start_path)
+    sourceRelPath = dirname(sourceFontRelPath)
+    sourceFontFileName = basename(source_font_path)
 
     totalConversionCounts = len(targetExts)
     currentConversionCount = 0
@@ -46,8 +48,8 @@ def convert(sourceFontPath, startPath):
         targetPath = abspath('%s/%s' % (dirs[targetExt], sourceRelPath))
         sp.call(['mkdir', '-p', targetPath])
 
-        targetFontPath = abspath('%s/%s' % (targetPath, sourceFontFileName)) # this file is still TTF/OTF
-        sp.call(['cp', sourceFontPath, targetFontPath])
+        targetFontPath = abspath('%s/%s' % (targetPath, sourceFontFileName))  # this file is still TTF/OTF
+        sp.call(['cp', source_font_path, targetFontPath])
         sp.call([programs[index], targetFontPath])
         sp.call(['rm', targetFontPath])
 
@@ -55,8 +57,8 @@ def convert(sourceFontPath, startPath):
 
 
 def main():
-    checkPrograms()
-    sourceFontFiles = getSourceFontFiles()
+    check_programs()
+    sourceFontFiles = get_source_font_files()
 
     totalCounts = 0
     for (absDir, fontFiles) in sourceFontFiles.items():
@@ -73,6 +75,7 @@ def main():
             print('\n[PROCESSED: %s/%s]' % count)
 
     exit(0)
+
 
 if __name__ == '__main__':
     main()

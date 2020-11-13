@@ -1,37 +1,42 @@
 import fontforge as ff
 from sys import argv
 
-def getFontName(font):
+
+def get_font_name(font) -> str:
     return font.fontname
 
-def getFullName(font):
+
+def get_full_name(font) -> str:
     return font.fullname
 
-def getSfntProperty(font, property):
-    sfntNames = font.sfnt_names
-    for entry in sfntNames:
-        if property in entry:
+
+def get_sfnt_property(font, property_name: str) -> str:
+    sfnt_names = font.sfnt_names
+    for entry in sfnt_names:
+        if property_name in entry:
             return entry[-1]
-            break
-    return None
+    return ''
+
 
 # Regarding family and preferred family, please refer to: https://fontforge.github.io/fontinfo.html
 
-def getFamily(font):
-    '''
+def get_family(font) -> str:
+    """
     Family
         The font's family name
-    '''
-    return getSfntProperty(font, 'Family')
+    """
+    return get_sfnt_property(font, 'Family')
 
-def getPreferredFamily(font):
-    '''
+
+def get_preferred_family(font) -> str:
+    """
     Preferred Family
         This is to get around a quirk of windows where only four Style names are allowed per family, so font families with more than four styles would get different family names above, but the preferred family name would be the same. This should only be specified if it differs from the family
-    '''
-    return getSfntProperty(font, 'Preferred Family')
+    """
+    return get_sfnt_property(font, 'Preferred Family')
 
-def getWeight(font):
+
+def get_weight(font):
     return font.os2_weight
 
 
@@ -39,29 +44,27 @@ def main():
     try:
         assert len(argv) > 1
     except AssertionError:
-        usageInfo = '[Usage] python2 %s <fontFile>' % __file__
-        print(usageInfo)
+        usage_info = '[Usage] python2 %s <fontFile>' % __file__
+        print(usage_info)
         exit(1)
 
-    font = ff.open(argv[1])
+    with ff.open(argv[1]) as font:
 
-    fontName = getFontName(font)
-    fullName = getFullName(font)
-    family = getFamily(font)
-    preferredFamily = getPreferredFamily(font)
-    weight = getWeight(font)
+        font_name = get_font_name(font)
+        full_name = get_full_name(font)
+        family = get_family(font)
+        preferred_family = get_preferred_family(font)
+        weight = get_weight(font)
 
-    print('font name: %s\n'
-        'full name: %s\n'
-        'family: %s\n'
-        'preferred family: %s\n'
-        'weight: %s\n'
-        % (fontName, fullName, family, preferredFamily, weight)
-    )
+        print(
+            'font name: %s\n'
+            'full name: %s\n'
+            'family: %s\n'
+            'preferred family: %s\n'
+            'weight: %s\n'
+            % (font_name, full_name, family, preferred_family, weight)
+        )
 
-    font.close()
-
-    pass
 
 if __name__ == '__main__':
     main()

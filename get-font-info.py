@@ -31,7 +31,10 @@ def get_family(font) -> str:
 def get_preferred_family(font) -> str:
     """
     Preferred Family
-        This is to get around a quirk of windows where only four Style names are allowed per family, so font families with more than four styles would get different family names above, but the preferred family name would be the same. This should only be specified if it differs from the family
+    This is to get around a quirk of windows where only four Style names are allowed per family,
+    so font families with more than four styles would get different family names above, but the preferred family name
+    would be the same.
+    This should only be specified if it differs from the family.
     """
     return get_sfnt_property(font, 'Preferred Family')
 

@@ -4,7 +4,7 @@ dstDir=.
 targetFormat="woff"
 
 function help {
-    echo "Usage: bash ""$0"" [-s srcDir] [-d dstDir] [-2] [-h]"
+    echo "Usage: bash \"$0\" [-s srcDir] [-d dstDir] [-2] [-h]"
     echo "* If srcDir (source directory) or dstDir (destination directory) are not specified, then they are set to current working directory by default."
     echo "* Use \"-2\" for converting to woff2; default is converting to woff."
     echo "* Use \"-h\" to show this help."
@@ -32,7 +32,7 @@ while getopts "s:d:2h" OPTION; do
     esac
 done
 
-srcFiles="$(find ""$srcDir"" -name *.[ot]tf)"
+srcFiles="$(find "$srcDir" -name "*.[ot]tf")"
 
 function convertSingle {
     local srcFile="$1"
@@ -51,7 +51,7 @@ function convertSingle {
         ;;
     esac
 
-    mkdir -p "$(dirname ""$dstFile"")"
+    mkdir -p "$(dirname "$dstFile")"
 
     # convert
     case $targetFormat in
@@ -62,7 +62,11 @@ function convertSingle {
         sfnt2woff "$srcFile"
         ;;
     esac
-    mv "$tempFile" "$dstFile"
+
+    if [[ "$(realpath "$tempFile")" != "$(realpath "$dstFile")" ]]
+    then
+        mv "$tempFile" "$dstFile"
+    fi
 }
 
 function convertAll {

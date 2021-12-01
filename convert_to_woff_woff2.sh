@@ -32,9 +32,7 @@ while getopts "s:d:2h" OPTION; do
     esac
 done
 
-srcFiles="$(find "$srcDir" -name "*.[ot]tf")"
-
-function convertSingle {
+function convert_single {
     local srcFile="$1"
 
     # get temporary and destination filenames
@@ -69,11 +67,15 @@ function convertSingle {
     fi
 }
 
-function convertAll {
-    local IFS=$(echo -e "\n\b")
-    local srcFilesArray=($srcFiles)
+function convert_all {
+    declare -r OLD_IFS="$IFS"
+    local IFS="$(echo -e "\n\b")"
 
-    for srcFile in ${srcFilesArray[@]}
+    local srcFiles=($(find "$srcDir" -name "*.[ot]tf"))
+
+    IFS="$OLD_IFS"
+
+    for srcFile in "${srcFiles[@]}"
     do
         # get destination filename
         local dstFile="$dstDir/${srcFile#$srcDir/}"
@@ -87,13 +89,10 @@ function convertAll {
         esac
 
         # convert
-        convertSingle "$srcFile" "$dstFile" &
+        convert_single "$srcFile" "$dstFile" &
     done
 
-    for srcFile in ${srcFilesArray[@]}
-    do
-        wait -f
-    done
+    wait -f
 }
 
-convertAll
+convert_all

@@ -25,7 +25,7 @@ to generate .woff and .woff2 webfonts.
 
 ### Cleanup
 Run
-``shell
+```shell
 make clean
 ```
 to clean up.

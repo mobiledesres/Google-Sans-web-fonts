@@ -1,8 +1,8 @@
 # Google Sans web fonts
 Fonts included in this repository:
 * Google Sans
-    * Google Sans Display
-    * Google Sans Text
+* Google Sans Display
+* Google Sans Text
 * Gallery Icons
 
 This repository provides automatic scripts to convert font files from .ttf format into .woff and .woff2 formats.

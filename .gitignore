@@ -1,4 +1,4 @@
-.vscode/
+*.log
 
 WOFF/
 WOFF2/
